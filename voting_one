@@ -1,0 +1,71 @@
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity >=0.7.0 <0.9.0;
+
+contract Smartvoting{
+    uint public Votecount = 0;
+
+    bool public isVoting;
+
+    struct vote{
+        address reciever;
+        uint256 timestamp;
+
+    }
+    mapping(address => vote) public  votes;
+    //defining events
+    event AddVote(address indexed voter, address receiver, uint256 timestamp);
+    event RemoveVote(address voter);
+    event StartVoting(address startedBy);
+    event StopVoting(address stoppedBy);
+
+    constructor() {
+        isVoting = false;
+
+    }
+
+    function getCount() view  public  returns(uint){
+        return Votecount;
+    }
+
+
+
+    function VotingStart() external returns(bool){
+        isVoting=true;
+        emit StartVoting(msg.sender);
+        return true;
+
+    }
+
+    function VotingStop() external returns(bool){
+        isVoting=true;
+        emit StopVoting(msg.sender);
+        return true;
+
+    }
+
+    function VoteAdd(address reciever) external returns(bool){
+        votes[msg.sender].reciever=reciever;
+        votes[msg.sender].timestamp;
+        emit AddVote(msg.sender, votes[msg.sender].reciever, votes[msg.sender].timestamp);
+        Votecount += 1;
+        isVoting = true;
+        return true;
+
+    }
+
+    function VoteRemove() external returns(bool){
+        delete votes[msg.sender];
+
+        emit RemoveVote(msg.sender);
+         Votecount -= 1;
+        return true;
+
+    }
+
+    function geVote(address voterAddress) external view returns(address candidateAddress){
+        
+        return votes[voterAddress].reciever;
+
+    }
+}
